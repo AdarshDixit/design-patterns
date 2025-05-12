@@ -1,6 +1,67 @@
-﻿// See https://aka.ms/new-console-template for more information
-using FactoryPattern;
+﻿/*
+ * Factory pattern
+ * The object creation is handled by a common product factory. 
+ * Client just needs to call a single factory.
+ * Components:
+ * Base product (IProduct)
+ * Concrete product (Personal, Commercial)
+ * Factory (ProductFactory)
+ */
 
-var factory = new CreditCardFactory();
-var creditCard = factory.GetCreditCard("platinum");
-Console.WriteLine($"Credit card: {creditCard.GetCardType()} - Annual charge: {creditCard.GetAnnualCharge()} - Limit: {creditCard.GetCreditLimit()}");
+// call factory
+var factory = new ProductFactory();
+var product = factory.CreateProduct("commercial");
+Console.WriteLine($"{product.GetName()} has price: {product.GetPrice()}");
+
+
+// Base product
+public interface IProduct
+{
+    public string GetName();
+    public int GetPrice();
+}
+
+// Product 1
+public class PersonalProduct : IProduct
+{
+    public string GetName()
+    {
+        return "Personal product";
+    }
+
+    public int GetPrice()
+    {
+        return 10;
+    }
+}
+
+// Product 2
+public class CommercialProduct : IProduct
+{
+    public string GetName()
+    {
+        return "Commercial product";
+    }
+
+    public int GetPrice()
+    {
+        return 100;
+    }
+}
+
+// Factory to create product
+public class ProductFactory
+{
+    public IProduct CreateProduct(string productType)
+    {
+        switch (productType.ToLower())
+        {
+            case "personal":
+                return new PersonalProduct();
+            case "commercial":
+                return new CommercialProduct();
+            default:
+                throw new NotImplementedException();
+        }
+    }
+}
